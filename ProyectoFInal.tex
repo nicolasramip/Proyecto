@@ -1,0 +1,90 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{longtable}
+\usepackage{adjustbox}
+\usepackage{natbib}
+
+
+\title{INDICES DE COLOMBIA}
+\author{
+        Nicolás Ramírez Pérez\\
+        Facultad de Ingeniería\\
+        Universidad de los Andes\\
+        Bogotá,\underline{Colombia}\\
+        \texttt{n.ramirez12@uniandes.edu.co}
+}
+\date{30 de Junio de 2018}
+
+\usepackage{Sweave}
+\begin{document}
+\input{ProyectoFInal-concordance}
+\maketitle
+
+
+\begin{abstract}
+Este es el proyecto final del curso dictado en la universidad de los Andes en la ciudad de Bogotá,Colombia. Este trabajo fue hecho bajo la filosofía de trabajo replicable.Este es el proyecto final del curso dictado en la universidad de los Andes en la ciudad de Bogotá,Colombia. Este trabajo fue hecho bajo la filosofía de trabajo replicable.Este es el proyecto final del curso dictado en la universidad de los Andes en la ciudad de Bogotá,Colombia. Este trabajo fue hecho bajo la filosofía de trabajo replicable.
+\end{abstract}
+
+
+
+\section*{Introducción}
+
+Estos son los indices de Colombia, siguiendo la logica del paper realizado en la clase anterior. Estos son los indices de Colombia, siguiendo la logica del paper realizado en la clase anterior. Estos son los indices de Colombia, siguiendo la logica del paper realizado en la clase anterior. Estos son los indices de Colombia, siguiendo la logica del paper realizado en la clase anterior
+
+Para comenzar veremos la sección \ref{univariada} en la página \pageref{univariada}.
+\clearpage
+
+\section{Exploración Univariada}\label{univariada}
+En esta seccion se explorara cada indice que nos dara el profesor Jose Magallanes, bajo en codigo estadistico desarrollado por el.En esta seccion se explorara cada indice que nos dara el profesor Jose Magallanes, bajo en codigo estadistico desarrollado por el.En esta seccion se explorara cada indice que nos dara el profesor Jose Magallanes, bajo en codigo estadistico desarrollado por el.
+
+
+Para conocer el comportamiento de las variables se preparo la Tabla \ref{stats}, donde se muestra los estadisticos de \emph{IDH}, \emph{Población Cabecera}  y \emph{Poblacion Resto}. Igualmente se muestra los histogramas correspondientes \ref{histog}
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: vie., jun. 29, 2018 - 7:18:25 p. m.
+\begin{table}[!htbp] \centering 
+  \caption{Medidas estadisticas} 
+  \label{stats} 
+\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Max} \\ 
+\hline \\[-1.8ex] 
+IDH & 32 & 0.691 & 0.804 & 0.879 \\ 
+Población.Cabecera & 32 & 13,090 & 717,197 & 10,070,801 \\ 
+Población.Resto & 32 & 21,926 & 268,111.5 & 1,428,858 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} \begin{figure}[h]
+\centering
+\includegraphics{ProyectoFInal-histogramas}
+\caption{Histogramas variables de interes}
+\label{histog}
+\end{figure}
+
+Debido a que existe sesgo en las poblaciones, seran transformados los datos con los cuales se realizo \ref{stats} (ver en la pag. \pageref{stats}) y se presentaran en la tabla \ref{stats1} y se presenta nuevamente los histogramas \ref{histog1}.
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: vie., jun. 29, 2018 - 7:18:26 p. m.
+\begin{table}[!htbp] \centering 
+  \caption{Medidas estadisticas datos Transformados} 
+  \label{stats1} 
+\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Max} \\ 
+\hline \\[-1.8ex] 
+Cabecera.Transformada & 32 & 9.480 & 13.483 & 16.125 \\ 
+Resto.Transformada & 32 & 9.995 & 12.499 & 14.172 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+\begin{figure}[h]
+\centering
+\includegraphics{ProyectoFInal-histogramas}
+\caption{Histogramas variables de interes}
+\label{histog1}
+\end{figure}
+
+
+\end{document}
