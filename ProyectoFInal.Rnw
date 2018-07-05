@@ -48,7 +48,7 @@ colb=read.csv(filename, stringsAsFactors = FALSE)
 
 Para conocer el comportamiento de las variables se preparo la Tabla \ref{stats}, donde se muestra los estadisticos de \emph{IDH}, \emph{Población Cabecera}  y \emph{Poblacion Resto}. Igualmente se muestra los histogramas correspondientes \ref{histog}
 
-<<results=tex,echo=FALSE>>=
+<<estadis,results=tex,echo=FALSE>>=
 # nos interesa IDH, y poblacion cabecera y poblacion resto
 # no se puede secar tabla de frecuencia, 
 # solo estadisticos:
@@ -74,7 +74,7 @@ hist(colb$Población.Resto, main= "Población Resto", col= paleta)
 \end{figure}
 
 Debido a que existe sesgo en las poblaciones, seran transformados los datos con los cuales se realizo \ref{stats} (ver en la pag. \pageref{stats}) y se presentaran en la tabla \ref{stats1} y se presenta nuevamente los histogramas \ref{histog1}.
-<<results=tex,echo=FALSE>>=
+<<transformacion,results=tex,echo=FALSE>>=
 # nos interesa IDH, y poblacion cabecera y poblacion resto
 # no se puede secar tabla de frecuencia, 
 # solo estadisticos:
@@ -101,9 +101,122 @@ hist(colb$Resto.Transformada, main= "Población Resto trans.", col= paleta)
 \caption{Histogramas variables de interes transformados}
 \label{histog1}
 \end{figure}
+\clearpage
+@
+\section{Exploración Bivariada}\label{bivariada}
+En este trabajo estamos interesados en el impacto de la poblacion en el el IDH, esto se puede obrservar en la tabla \ref{cor}. 
+<<correlaciones,results=tex,echo=FALSE>>=
+# En este trabajo estamos interesados en el impacto de 
+# la poblacion en el el IDH, veamos IDH con cada uno:
+explanans=names(colb)[c(7:8)] # usando las logs
+corrDem=cor(colb$IDH,colb[,explanans],
+            use = "na.or.complete")
+stargazer(corrDem, title="Correlaciones",label="cor")
+@
 
-\section{Exploración Bivariada}
-En este trabajo estamos interesados en el impacto de 
-la poblacion en el el IDH, veamos IDH con cada uno:
+De igual manera, nos intera la correlacion de las variable independientes. Esto se puede observar en la Tabla \ref{correind} y en la Grafica \ref{corre}
+
+<<correlacionesind,results=tex,echo=FALSE>>=
+
+corrTableX=round(cor(colb[,explanans],
+                         use = "na.or.complete"),2)
+corrTableX_copy=corrTableX
+corrTableX[upper.tri(corrTableX)]<-""
+stargazer(corrTableX_copy, title="Correlaciones",label="correind")
+@
+
+\begin{figure}[h]
+\centering
+<<pcorre, echo=FALSE,fig=TRUE>>=
+# y la correlación entre las variables independientes:
+#ver:
+plot(colb[,explanans])
+@
+\caption{Correlaciones variables de interes transformados}
+\label{corre}
+\end{figure}
+\clearpage
+
+\section{Modelos de Regresión}\label{modelos}
+
+
+
+
+En la tabla \ref{regA} se puede observar los resultados de la regresión lineal sin la variable Población resto. Por otra parte, se evidencia los resultados del modelo de regresión con la variable, anteriormente enunciada, en la tabla \ref{regB}
+<<Modelos regrescion,results=tex,echo=FALSE>>=
+LinRegA = lm(IDH ~ ., data = colb[,c(1,7)])
+LinRegB = lm(IDH ~ ., data = colb[,c(1,7:8)])
+
+stargazer(LinRegA, title="Modelo de regresion sin población resto",label="regA")
+stargazer(LinRegA, title="Modelo de regresion con población resto",label="regB")
+@
+\section{Exploración Espacial}\label{espacial}
+Calculemos conglomerados de regiones, usando toda la información de las tres variables. Usaremos la tecnica de k-means propuesta por MacQueen \cite{macqueen_methods_nodate}
+
+<<getMap, echo=FALSE,results=hide>>=
+library(rgdal)
+folder='COL_maps'
+file='COL_adm1.shp'
+mapaFile=file.path(folder,file)
+mapCol <- rgdal::readOGR(mapaFile,stringsAsFactors=F) 
+
+# con esto hagamos el merge:
+sub_colb=colb[,c(1:2,7:8)]
+mapCol_idh=merge(mapCol,sub_colb, by.x='NAME_1', by.y='Departamento',all.x=F)
+
+# cuantas regiones me quedaron luego del merge?
+nrow(mapCol_idh)  # todas!!...
+
+
+# preparacion para clusterizar:
+
+# que tengo?:
+names(mapCol_idh)
+@
+
+<<echo=FALSE>>=
+dimensions=c("NAME_1","IDH","Cabecera.Transformada","Resto.Transformada")
+library(cluster)
+dataCluster=mapCol_idh@data[,c(dimensions)]
+# como la data es numerica la normalizo (menos la column 1):
+dataCluster[,-1]=scale(dataCluster[,-1])
+resultado=kmeans(dataCluster[,-1],3)
+
+#creo data frame con los clusters:
+clusters=as.data.frame(resultado$cluster)
+
+# aÃ±ado columna con nombre de regiones
+clusters$NAME_1=dataCluster$NAME_1
+names(clusters)=c('cluster','NAME_1')
+#hago el merge hacia el mapa:
+mapCol_idh=merge(mapCol_idh,clusters, by='NAME_1',all.x=F)
+@
+
+\begin{figure}[h]
+\centering
+
+<<plotMap1, echo=FALSE, fig=TRUE>>=
+library(RColorBrewer)
+library(classInt)
+varToPLot=mapCol_idh$cluster
+numberOfClasses = length(unique(varToPLot)) 
+colorForScale='Set2'
+paleta = brewer.pal(numberOfClasses, colorForScale)
+plot(mapCol,col='grey',border=0)
+plot(mapCol_idh, col = paleta[varToPLot],border=F,add=T)
+legend('left', legend = c("LOW","UP","MEDIUM"),
+       fill = paleta, 
+       cex = 0.6, 
+       bty = "n",
+       title="conglomerado")
+@
+
+\caption{Departamentos conglomerados segun sus indicadores}\label{clustmap}
+\end{figure}
+
+
+\bibliographystyle{abbrv}
+\renewcommand{\refname}{Bibliografía}
+\bibliography{proyecto}
 
 \end{document}
